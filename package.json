@@ -1,0 +1,10 @@
+{
+  "name": "mgcb-generator",
+  "version": "1.0.0",
+  "description": "Simple .mgcb file generator for Monogame.",
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "keywords": ["monogame","generator","aseprite"],
+  "author": "VaskillerDev",
+  "license": "MIT"
+}
