@@ -1,0 +1,6 @@
+{
+  "content": "/content",
+  "debug": false,
+  "asepriteLib": "/path/to/your/MonoGame.Aseprite.dll",
+  "asepritePipeline": "path/to/your/MonoGame.Aseprite.ContentPipeline.dll"
+}
