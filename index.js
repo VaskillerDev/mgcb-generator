@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // tested on node 12.4
 // -- env:
 //      content: string,
@@ -10,19 +11,24 @@
 // -> recursively add all files to example.mgcb
 const path = require("path");
 const fs = require("fs");
-const config = require("./mgcb-gen-config.json");
+const configFile = fs.readFileSync('./mgcb-gen-config.json');
+const config = JSON.parse(configFile.toString('utf-8'));
 
-const DEBUG = process.env.debug || config.debug || false;
-const ASEPRITE_LIB_PATH = process.env.asepriteLib || config.asepriteLib || "";
-const ASEPRITE_PIPELINE_PATH = process.env.asepritePipeline || config.asepritePipeline || "";
-const maybePathToContent = process.env.content  || config.content || new Error("Path to content directory not found.");
+console.log("Your config: ", config)
+
+const DEBUG = process.env.debug || config['debug'] || false;
+const ASEPRITE_LIB_PATH = process.env.asepriteLib || config['asepriteLib'] || "";
+const ASEPRITE_PIPELINE_PATH = process.env.asepritePipeline || config['asepritePipeline'] || "";
+const maybePathToContent = process.env.content  || config['content'] || new Error("Path to content directory not found.");
+
+// todo: add support aseprite lib and pipeline file check
 
 if (maybePathToContent instanceof Error) { // path not set
     console.error(maybePathToContent);
     process.exit(1);
 }
 
-const purePathToContent = path.join(__dirname,maybePathToContent); // content dir
+const purePathToContent = maybePathToContent; // content dir
 const pathToMGCB = path.join(purePathToContent,'content.mgcb');
 
 if (!fs.existsSync(purePathToContent)) { // content dir not exist
