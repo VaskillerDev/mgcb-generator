@@ -18,12 +18,9 @@ console.log('Your config: ', config);
 
 const DEBUG = process.env.debug || config['debug'] || false;
 const ASEPRITE_LIB_PATH = process.env.asepriteLib || config['asepriteLib'];
-const ASEPRITE_PIPELINE_PATH =
-  process.env.asepritePipeline || config['asepritePipeline'];
+const ASEPRITE_PIPELINE_PATH = process.env.asepritePipeline || config['asepritePipeline'];
 const maybePathToContent =
-  process.env.content ||
-  config['content'] ||
-  new Error('Path to content directory not found.');
+  process.env.content || config['content'] || new Error('Path to content directory not found.');
 
 if (maybePathToContent instanceof Error) {
   // path not set
@@ -46,23 +43,15 @@ const addAsepriteEntity = (mgcb, dirName) => {
     const pathToEntity = path.join(purePathToContent, dirName);
     const list = fs.readdirSync(pathToEntity);
     const spriteFile = list.filter(file => path.extname(file) === '.png')[0];
-    const animationFile = list.filter(
-      file => path.extname(file) === '.json'
-    )[0];
+    const animationFile = list.filter(file => path.extname(file) === '.json')[0];
 
-    if (DEBUG)
-      console.log(
-        `dirName: ${dirName} \nSprite file: ${spriteFile} \nAnimation file: ${animationFile}`
-      );
+    if (DEBUG) console.log(`dirName: ${dirName} \nSprite file: ${spriteFile} \nAnimation file: ${animationFile}`);
     checkFile(spriteFile, `Sprite file not found in ${dirName}`);
     checkFile(animationFile, `Animation file not found in ${dirName}`);
 
     // .json
     fs.appendFileSync(mgcb, `#begin ${dirName}/${animationFile}\n`);
-    fs.appendFileSync(
-      mgcb,
-      '/importer:AsepriteImporter\n' + '/processor:Processor\n'
-    );
+    fs.appendFileSync(mgcb, '/importer:AsepriteImporter\n' + '/processor:Processor\n');
     fs.appendFileSync(mgcb, `/build:${dirName}/${animationFile}\n\n`);
 
     // .png
@@ -113,18 +102,9 @@ console.log(`MGCB path: ${pathToMGCB}`);
 
 if (fs.existsSync(pathToMGCB)) fs.unlinkSync(pathToMGCB);
 
-fs.writeFileSync(
-  pathToMGCB,
-  '\n#----------------------------- Global Properties ----------------------------#\n\n'
-);
+fs.writeFileSync(pathToMGCB, '\n#----------------------------- Global Properties ----------------------------#\n\n');
 addWindowsConfig(pathToMGCB);
-fs.appendFileSync(
-  pathToMGCB,
-  '\n#-------------------------------- References --------------------------------#\n\n'
-);
+fs.appendFileSync(pathToMGCB, '\n#-------------------------------- References --------------------------------#\n\n');
 addAsepriteReferences(pathToMGCB);
-fs.appendFileSync(
-  pathToMGCB,
-  '\n#---------------------------------- Content ---------------------------------#\n\n'
-);
+fs.appendFileSync(pathToMGCB, '\n#---------------------------------- Content ---------------------------------#\n\n');
 addAsepriteEntity(pathToMGCB, 'human');
