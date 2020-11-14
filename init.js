@@ -27,34 +27,30 @@ fs.writeFileSync(pathToMgcbGenConfigFile, configString);
   let nugetDir;
   while (slide > 0) {
     currentPath = path.resolve(currentPath, '../');
-    fs.readdirSync(currentPath).find(file => {
+    fs.readdirSync(currentPath).find(file => { // search nuget-like dirs
+      // require dirs
       let isNugetDir = false;
-      if (file === '.nuget')
-        (nugetDir = path.join(currentPath, file, 'packages')) &&
-          (isNugetDir = true);
-      if (file === 'packages')
-        (nugetDir = path.join(currentPath, file)) && (isNugetDir = true);
+      if (file === '.nuget') (nugetDir = path.join(currentPath, file, 'packages')) && (isNugetDir = true); // for usr dir
+      if (file === 'packages') (nugetDir = path.join(currentPath, file)) && (isNugetDir = true);
       return isNugetDir;
-    }) && candidatePaths.push(nugetDir); // require dirs // side effect
+    }) && candidatePaths.push(nugetDir); // side effect
     --slide;
   }
   if (candidatePaths.length === 0) {
-    console.warn(
-      `${WARN_MSG} nuget packages dir not found. Please set the path manually.`
-    );
+    console.warn(`${WARN_MSG} nuget packages dir not found. Please set the path manually.`);
   } else {
-    candidatePaths.forEach(candidatePath => {
+    const candidateAsepritePaths = [];
+    candidatePaths.forEach(candidatePath => { // search asprite-like dirs
       const files = fs.readdirSync(candidatePath);
-      const asepriteLib = files.filter(file => asepriteNameLike.test(file));
-      if (asepriteLib)
-        console.log(path.join(candidatePath, asepriteLib.toString()));
+      const asepriteLib = files.filter(file => asepriteNameLike.test(file)).toString();
+      if (asepriteLib) candidateAsepritePaths.push(path.join(candidatePath, asepriteLib));
     });
+    if (candidateAsepritePaths.length !== 0) {
+      candidateAsepritePaths.forEach(candidatePath => { // search asprite files
+        const files = fs.readdirSync(candidatePath);
+        // todo: continue search function
+      })
+    }
   }
 }
 
-/*while (searchCountAttempt > 0) {
-    const maybePackagesDir =  fs.readdirSync(currentPath).find(fileName=>fileName==="packages");
-    const parent = path.dirname(currentPath).split(path.sep).pop();
-    console.log(parent)
-    --searchCountAttempt;
-}*/
