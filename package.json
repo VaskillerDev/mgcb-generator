@@ -2,9 +2,9 @@
   "name": "mgcb-generator",
   "version": "1.0.0",
   "description": "[wip] Simple .mgcb file generator for Monogame.",
-  "main": "index.js",
+  "main": "gen.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node gen.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
@@ -15,7 +15,7 @@
   },
   "bin": {
     "mgcb_init": "init.js",
-    "mgcb_gen": "index.js"
+    "mgcb_gen": "gen.js"
   },
   "preferGlobal": true,
   "keywords": [
