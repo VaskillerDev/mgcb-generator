@@ -1,6 +1,7 @@
 {
-  "content": "/content",
+  "content": "./content",
   "debug": false,
   "asepriteLib": "/path/to/your/MonoGame.Aseprite.dll",
-  "asepritePipeline": "path/to/your/MonoGame.Aseprite.ContentPipeline.dll"
+  "asepritePipeline": "path/to/your/MonoGame.Aseprite.ContentPipeline.dll",
+  "editor": "/path/to/your/mgcb-editor.exe"
 }
