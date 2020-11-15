@@ -8,6 +8,31 @@ const configString = JSON.stringify(config, null, ' ');
 const NOTICE_MSG = 'mgcb_init: [Notice]';
 const WARN_MSG = 'mgcb_init: [Warn]';
 
+const search = (source,target) => {
+  // --declaration
+  const searchSync = (collector,source,target) => { // recursive search
+    const files = fs.readdirSync(source,{withFileTypes: true});
+    const dirs = files.filter(file => file.isDirectory()).map(dir => dir.name);
+    if (files.length === 0 || !files) return;
+    files.forEach(file => {
+      if (file.name === target) {
+        const targetPath = path.join(source,file.name);
+        collector.push(targetPath);
+      }
+    });
+    if (dirs.length === 0 || !dirs) return;
+    for (const dir of dirs) {
+      const tmpPath = path.resolve(source,dir.toString());
+      searchSync(collector,tmpPath,target);
+    }
+  }
+
+  // --impl
+  const collector = [];
+  searchSync(collector,source,target);
+  return collector;
+}
+
 if (fs.existsSync(pathToMgcbGenConfigFile)) {
   console.warn(`${NOTICE_MSG} ${pathToMgcbGenConfigFile} exist`);
   process.exit(0);
@@ -16,6 +41,7 @@ if (fs.existsSync(pathToMgcbGenConfigFile)) {
 fs.writeFileSync(pathToMgcbGenConfigFile, configString);
 
 {
+  // simple search MonoGame.Aseprite.dll && MonoGame.Aseprite.ContentPipeline.dll
   // check and set .nuget files
   const dirs = path.resolve('./', './').split(path.sep);
   const last = dirs.length - 1;
@@ -46,10 +72,17 @@ fs.writeFileSync(pathToMgcbGenConfigFile, configString);
       if (asepriteLib) candidateAsepritePaths.push(path.join(candidatePath, asepriteLib));
     });
     if (candidateAsepritePaths.length !== 0) {
-      candidateAsepritePaths.forEach(candidatePath => { // search asprite files
-        const files = fs.readdirSync(candidatePath);
-        // todo: continue search function
-      })
+      let collectionPotentialWithPipelineLib =
+      candidateAsepritePaths.map(candidatePath =>  // search aseprite files
+        search(candidatePath,"MonoGame.Aseprite.ContentPipeline.dll")
+      ).flat();
+      let collectionPotentialWithLib =
+          candidateAsepritePaths.map(candidatePath =>  // search aseprite files
+              search(candidatePath,"MonoGame.Aseprite.dll")
+          ).flat();
+      /*console.log(collectionPotentialWithPipelineLib);
+      console.log(collectionPotentialWithLib);*/
+      // todo: set found paths into config
     }
   }
 }
