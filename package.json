@@ -1,6 +1,6 @@
 {
   "name": "mgcb-generator",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "[wip] Simple .mgcb file generator for Monogame.",
   "main": "gen.js",
   "scripts": {
