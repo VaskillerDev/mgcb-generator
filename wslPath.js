@@ -3,7 +3,7 @@ function isWslPath(wslPath) {
   return wslPath.includes('/mnt/');
 }
 
-function unsafeWslToWindowsSync(wslPath) {
+function toWindowsSyncUnsafe(wslPath) {
   // convert wsl path to windows
   const parsedWslPath = wslPath.split('/');
   const usersIndex = parsedWslPath.indexOf('Users');
@@ -12,12 +12,12 @@ function unsafeWslToWindowsSync(wslPath) {
   return winVD + winUserPath.join('/');
 }
 
-function wslToWindowsSync(wslPath) {
-  if (isWslPath(wslPath)) return unsafeWslToWindowsSync(wslPath);
+function ToWindowsSync(wslPath) {
+  if (isWslPath(wslPath)) return toWindowsSyncUnsafe(wslPath);
   return undefined;
 }
 
 module.exports = {
   isWslPath: isWslPath,
-  wslToWindowsSync: wslToWindowsSync,
+  toWindowsSync: ToWindowsSync,
 };

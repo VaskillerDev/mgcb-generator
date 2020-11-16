@@ -11,8 +11,15 @@
 // -> recursively add all files to example.mgcb
 const path = require('path');
 const fs = require('fs');
-const configFile = fs.readFileSync('./mgcb-gen-config.json');
-const config = JSON.parse(configFile.toString('utf-8'));
+
+let configFile;
+let config;
+try {
+  configFile = fs.readFileSync('./mgcb-gen-config.json');
+  config = JSON.parse(configFile.toString('utf-8'));
+} catch (ignore) {
+  throw new Error('mgcb-gen-config.json not found in this directory.');
+}
 
 console.log('Your config: ', config);
 
@@ -37,7 +44,7 @@ if (!fs.existsSync(purePathToContent)) {
   process.exit(1);
 }
 // -- declaration
-const addAsepriteEntity = (mgcb, dirName) => {
+function addAsepriteEntity (mgcb, dirName) {
   // require .json && .png file
   try {
     const pathToEntity = path.join(purePathToContent, dirName);
@@ -72,20 +79,22 @@ const addAsepriteEntity = (mgcb, dirName) => {
   } catch (e) {
     console.error('Error in addAsepriteEntity: ' + e);
   }
-};
-const addAsepriteReferences = mgcb => {
-  // todo: hardcoded
+}
+
+function addAsepriteReferences (mgcb) {
   if (DEBUG) {
     console.log('asepriteLib: ' + ASEPRITE_LIB_PATH);
     console.log('asepritePipeline: ' + ASEPRITE_PIPELINE_PATH);
   }
   fs.appendFileSync(mgcb, `/reference:${ASEPRITE_LIB_PATH}\n`);
   fs.appendFileSync(mgcb, `/reference:${ASEPRITE_PIPELINE_PATH}\n`);
-};
-const checkFile = (file, msg) => {
+}
+
+function checkFile (file, msg) {
   if (!file) throw new Error(msg);
-};
-const addWindowsConfig = mgcb => {
+}
+
+function addWindowsConfig (mgcb) {
   fs.appendFileSync(
     mgcb,
     '/outputDir:bin\n' +
@@ -95,7 +104,8 @@ const addWindowsConfig = mgcb => {
       '/profile:Reach\n' +
       '/compress:False\n'
   );
-};
+}
+
 // -- start
 console.log(`Content path: ${purePathToContent}`);
 console.log(`MGCB path: ${pathToMGCB}`);
