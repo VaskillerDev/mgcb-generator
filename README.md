@@ -3,11 +3,13 @@ Simple .mgcb file generator for Monogame. CLI-tools for generate .mgcb from args
 The file is also generated based on the attributes.
 
 <h2>Installation</h2>
+
 ```sh
 npm install mgcb-generator -g
 ```
 
 <h2>Usage</h2>
+
 ```
 where is one of: 
 init, gen 
@@ -16,6 +18,7 @@ mgcbg help         quick help
 mgcbg init         init mgcb-gen-config.json file for generate .mgcb file content
 mgcbg gen          genearte .mgcb file content
 ```
+
 <h2>Why?</h2>
 It's simple. 
 I needed a simple tool that easily automates the 
@@ -35,6 +38,7 @@ obj
 Program.cs
 ```
 Now we need to go to our project folder and generate a configuration file for the generator:
+
 ```sh
 foo@bar:~$ cd root/your/awesome/MonogameProject
 
@@ -50,10 +54,12 @@ obj
 Program.cs
 mgcb-gen-config.json # added new file
 ```
+
 Now check the file to see if the necessary configurations are set there. 
 The tool will try to find the paths to the required packages by itself.
 If it doesn't find it, please set it yourself.<br/>
 Initially, the configuration file should look something like this:<br>
+
 ```json
 {
   "content": "./content",
@@ -64,6 +70,7 @@ Initially, the configuration file should look something like this:<br>
 }
 ```
 Now we generate our final content.mgcb
+
 ```
 # Generate our content.mgcb
 foo@bar:/root/your/awesome/MonogameProject/$ mgcbg gen
@@ -72,4 +79,5 @@ foo@bar:/root/your/awesome/MonogameProject/content/$ ls
 goblin
 content.mgcb
 ```
+
 Now we can build a resource using mgcb-editor.
