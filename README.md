@@ -47,7 +47,7 @@ foo@bar:~$ cd root/your/awesome/MonogameProject
 foo@bar:/root/your/awesome/MonogameProject/$ mkdir content 
 
 foo@bar:/root/your/awesome/MonogameProject/$ mgcbg init
-ls
+foo@bar:/root/your/awesome/MonogameProject/$ ls
 bin
 Game1.cs
 obj
