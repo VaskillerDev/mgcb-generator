@@ -44,7 +44,7 @@ if (!fs.existsSync(purePathToContent)) {
   process.exit(1);
 }
 // -- declaration
-function addAsepriteEntity (mgcb, dirName) {
+function addAsepriteEntity (mgcb, dirName) { //todo: check json for the aseprite key
   // require .json && .png file
   try {
     const pathToEntity = path.join(purePathToContent, dirName);
