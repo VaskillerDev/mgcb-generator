@@ -36,7 +36,6 @@ if (maybePathToContent instanceof Error) {
 }
 
 const purePathToContent = maybePathToContent; // content dir
-const pathToMGCB = path.join(purePathToContent, 'content.mgcb');
 
 if (!fs.existsSync(purePathToContent)) {
   // content dir not exist
@@ -106,15 +105,31 @@ function addWindowsConfig (mgcb) {
   );
 }
 
+function addAndroidConfig (mgcb) {
+  fs.appendFileSync(
+      mgcb,
+      '/outputDir:bin\n' +
+      '/intermediateDir:obj\n' +
+      '/platform:Android\n' +
+      '/config:\n' +
+      '/profile:Reach\n' +
+      '/compress:False\n'
+  );
+}
+
+function createMgcbFile(prefix,pathToContent,addConfig) {
+  const pathToMGCB = path.join(pathToContent, prefix+'_content.mgcb');
+  console.log(`Content path: ${pathToContent}`);
+  console.log(`MGCB path: ${pathToMGCB}`);
+  if (fs.existsSync(pathToMGCB)) fs.unlinkSync(pathToMGCB);
+  fs.writeFileSync(pathToMGCB, '\n#----------------------------- Global Properties ----------------------------#\n\n');
+  addConfig(pathToMGCB);
+  fs.appendFileSync(pathToMGCB, '\n#-------------------------------- References --------------------------------#\n\n');
+  addAsepriteReferences(pathToMGCB);
+  fs.appendFileSync(pathToMGCB, '\n#---------------------------------- Content ---------------------------------#\n\n');
+  addAsepriteEntity(pathToMGCB, 'human');
+}
+
 // -- start
-console.log(`Content path: ${purePathToContent}`);
-console.log(`MGCB path: ${pathToMGCB}`);
-
-if (fs.existsSync(pathToMGCB)) fs.unlinkSync(pathToMGCB);
-
-fs.writeFileSync(pathToMGCB, '\n#----------------------------- Global Properties ----------------------------#\n\n');
-addWindowsConfig(pathToMGCB);
-fs.appendFileSync(pathToMGCB, '\n#-------------------------------- References --------------------------------#\n\n');
-addAsepriteReferences(pathToMGCB);
-fs.appendFileSync(pathToMGCB, '\n#---------------------------------- Content ---------------------------------#\n\n');
-addAsepriteEntity(pathToMGCB, 'human');
+createMgcbFile('win',purePathToContent,addWindowsConfig);
+createMgcbFile('android',purePathToContent,addAndroidConfig);
