@@ -71,7 +71,7 @@ Initially, the configuration file should look something like this:<br>
 ```
 Now we generate our final content.mgcb
 
-```
+```sh
 # Generate our content.mgcb
 foo@bar:/root/your/awesome/MonogameProject/$ mgcbg gen
 foo@bar:/root/your/awesome/MonogameProject/$ cd content
