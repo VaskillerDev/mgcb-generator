@@ -8,7 +8,7 @@ function toWindowsSyncUnsafe(wslPath) {
   const parsedWslPath = wslPath.split('/');
   const usersIndex = parsedWslPath.indexOf('Users');
   const winVD = parsedWslPath[usersIndex - 1].toUpperCase() + ':/'; // get virtual disk name
-  const winUserPath = parsedWslPath.slice(usersIndex, parsedWslPath.length - 1);
+  const winUserPath = parsedWslPath.slice(usersIndex, parsedWslPath.length);
   return winVD + winUserPath.join('/');
 }
 
