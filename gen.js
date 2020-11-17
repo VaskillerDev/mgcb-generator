@@ -127,7 +127,14 @@ function createMgcbFile(prefix,pathToContent,addConfig) {
   fs.appendFileSync(pathToMGCB, '\n#-------------------------------- References --------------------------------#\n\n');
   addAsepriteReferences(pathToMGCB);
   fs.appendFileSync(pathToMGCB, '\n#---------------------------------- Content ---------------------------------#\n\n');
-  addAsepriteEntity(pathToMGCB, 'human');
+  const dirs = fs.readdirSync(pathToContent,{withFileTypes: true})
+      .filter(file=>file.isDirectory())
+      .map(dir=>dir.name)
+      .filter(dirName => dirName.toString() !== "obj" && dirName.toString() !== "bin");
+
+  for (const dir of dirs) {
+    addAsepriteEntity(pathToMGCB, dir);
+  }
 }
 
 // -- start
