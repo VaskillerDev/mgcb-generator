@@ -51,6 +51,18 @@ function addAsepriteEntity (mgcb, dirName) { //todo: check json for the aseprite
     const spriteFile = list.filter(file => path.extname(file) === '.png')[0];
     const animationFile = list.filter(file => path.extname(file) === '.json')[0];
 
+     // cuz it's this may not be an animation at all
+      const pathToMaybeAsepriteJson = path.resolve(pathToEntity + '/' + animationFile);
+      if (DEBUG) console.log("pathToMaybeAsepriteJson: " + pathToMaybeAsepriteJson);
+      const maybeAsepriteJson = require(pathToMaybeAsepriteJson);
+      if (!(maybeAsepriteJson && maybeAsepriteJson.meta && maybeAsepriteJson.meta.app)) {
+        console.warn(animationFile + " is not contain aseprite meta data");
+        return
+      }
+      if (maybeAsepriteJson.meta.app !== 'http://www.aseprite.org/') {
+        console.warn(animationFile + " is not contain correctly aseprite .meta.app information")
+      }
+
     if (DEBUG) console.log(`dirName: ${dirName} \nSprite file: ${spriteFile} \nAnimation file: ${animationFile}`);
     checkFile(spriteFile, `Sprite file not found in ${dirName}`);
     checkFile(animationFile, `Animation file not found in ${dirName}`);
