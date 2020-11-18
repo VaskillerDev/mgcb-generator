@@ -4,7 +4,7 @@ const command = process.argv[2] || showHelp();
 
 function showHelp() {
   console.log(
-      `mgcbg ver. ${version} \n\n` +
+    `mgcbg ver. ${version} \n\n` +
       'Usage: mgcbg <command> <flags>\n\n' +
       'where is one of: \n' +
       'init, gen\n\n' +

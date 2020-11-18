@@ -11,8 +11,8 @@ npm install mgcb-generator -g
 <h2>Usage</h2>
 
 ```
-where is one of: 
-init, gen 
+where is one of:
+init, gen
 
 mgcbg help         quick help
 mgcbg init         init mgcb-gen-config.json file for generate .mgcb file content
@@ -37,14 +37,15 @@ Game1.cs
 obj
 Program.cs
 ```
+
 Now we need to go to our project folder and generate a configuration file for the generator:
 
 ```sh
 foo@bar:~$ cd root/your/awesome/MonogameProject
 
-# Here you need to add the directories with your files. 
+# Here you need to add the directories with your files.
 # For example, goblin/goblin.png and goblin/goblin.json
-foo@bar:/root/your/awesome/MonogameProject/$ mkdir content 
+foo@bar:/root/your/awesome/MonogameProject/$ mkdir content
 
 foo@bar:/root/your/awesome/MonogameProject/$ mgcbg init
 foo@bar:/root/your/awesome/MonogameProject/$ ls
@@ -55,7 +56,7 @@ Program.cs
 mgcb-gen-config.json # added new file
 ```
 
-Now check the file to see if the necessary configurations are set there. 
+Now check the file to see if the necessary configurations are set there.
 The tool will try to find the paths to the required packages by itself.
 If it doesn't find it, please set it yourself.<br/>
 Initially, the configuration file should look something like this:<br>
@@ -69,6 +70,7 @@ Initially, the configuration file should look something like this:<br>
   "editor": "/path/to/your/mgcb-editor.exe"
 }
 ```
+
 Now we generate our final content.mgcb
 
 ```sh

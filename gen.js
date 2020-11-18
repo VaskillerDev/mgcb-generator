@@ -43,7 +43,8 @@ if (!fs.existsSync(purePathToContent)) {
   process.exit(1);
 }
 // -- declaration
-function addAsepriteEntity (mgcb, dirName) { //todo: check json for the aseprite key
+function addAsepriteEntity(mgcb, dirName) {
+  //todo: check json for the aseprite key
   // require .json && .png file
   try {
     const pathToEntity = path.join(purePathToContent, dirName);
@@ -51,17 +52,17 @@ function addAsepriteEntity (mgcb, dirName) { //todo: check json for the aseprite
     const spriteFile = list.filter(file => path.extname(file) === '.png')[0];
     const animationFile = list.filter(file => path.extname(file) === '.json')[0];
 
-     // cuz it's this may not be an animation at all
-      const pathToMaybeAsepriteJson = path.resolve(pathToEntity + '/' + animationFile);
-      if (DEBUG) console.log("pathToMaybeAsepriteJson: " + pathToMaybeAsepriteJson);
-      const maybeAsepriteJson = require(pathToMaybeAsepriteJson);
-      if (!(maybeAsepriteJson && maybeAsepriteJson.meta && maybeAsepriteJson.meta.app)) {
-        console.warn(animationFile + " is not contain aseprite meta data");
-        return
-      }
-      if (maybeAsepriteJson.meta.app !== 'http://www.aseprite.org/') {
-        console.warn(animationFile + " is not contain correctly aseprite .meta.app information")
-      }
+    // cuz it's this may not be an animation at all
+    const pathToMaybeAsepriteJson = path.resolve(pathToEntity + '/' + animationFile);
+    if (DEBUG) console.log('pathToMaybeAsepriteJson: ' + pathToMaybeAsepriteJson);
+    const maybeAsepriteJson = require(pathToMaybeAsepriteJson);
+    if (!(maybeAsepriteJson && maybeAsepriteJson.meta && maybeAsepriteJson.meta.app)) {
+      console.warn(animationFile + ' is not contain aseprite meta data');
+      return;
+    }
+    if (maybeAsepriteJson.meta.app !== 'http://www.aseprite.org/') {
+      console.warn(animationFile + ' is not contain correctly aseprite .meta.app information');
+    }
 
     if (DEBUG) console.log(`dirName: ${dirName} \nSprite file: ${spriteFile} \nAnimation file: ${animationFile}`);
     checkFile(spriteFile, `Sprite file not found in ${dirName}`);
@@ -92,7 +93,7 @@ function addAsepriteEntity (mgcb, dirName) { //todo: check json for the aseprite
   }
 }
 
-function addAsepriteReferences (mgcb) {
+function addAsepriteReferences(mgcb) {
   if (DEBUG) {
     console.log('asepriteLib: ' + ASEPRITE_LIB_PATH);
     console.log('asepritePipeline: ' + ASEPRITE_PIPELINE_PATH);
@@ -101,11 +102,11 @@ function addAsepriteReferences (mgcb) {
   fs.appendFileSync(mgcb, `/reference:${ASEPRITE_PIPELINE_PATH}\n`);
 }
 
-function checkFile (file, msg) {
+function checkFile(file, msg) {
   if (!file) throw new Error(msg);
 }
 
-function addWindowsConfig (mgcb) {
+function addWindowsConfig(mgcb) {
   fs.appendFileSync(
     mgcb,
     '/outputDir:bin\n' +
@@ -117,10 +118,10 @@ function addWindowsConfig (mgcb) {
   );
 }
 
-function addAndroidConfig (mgcb) {
+function addAndroidConfig(mgcb) {
   fs.appendFileSync(
-      mgcb,
-      '/outputDir:bin\n' +
+    mgcb,
+    '/outputDir:bin\n' +
       '/intermediateDir:obj\n' +
       '/platform:Android\n' +
       '/config:\n' +
@@ -129,8 +130,8 @@ function addAndroidConfig (mgcb) {
   );
 }
 
-function createMgcbFile(prefix,pathToContent,addConfig) {
-  const pathToMGCB = path.join(pathToContent, prefix+'_content.mgcb');
+function createMgcbFile(prefix, pathToContent, addConfig) {
+  const pathToMGCB = path.join(pathToContent, prefix + '_content.mgcb');
   console.log(`Content path: ${pathToContent}`);
   console.log(`MGCB path: ${pathToMGCB}`);
   if (fs.existsSync(pathToMGCB)) fs.unlinkSync(pathToMGCB);
@@ -139,10 +140,11 @@ function createMgcbFile(prefix,pathToContent,addConfig) {
   fs.appendFileSync(pathToMGCB, '\n#-------------------------------- References --------------------------------#\n\n');
   addAsepriteReferences(pathToMGCB);
   fs.appendFileSync(pathToMGCB, '\n#---------------------------------- Content ---------------------------------#\n\n');
-  const dirs = fs.readdirSync(pathToContent,{withFileTypes: true})
-      .filter(file=>file.isDirectory())
-      .map(dir=>dir.name)
-      .filter(dirName => dirName.toString() !== "obj" && dirName.toString() !== "bin");
+  const dirs = fs
+    .readdirSync(pathToContent, { withFileTypes: true })
+    .filter(file => file.isDirectory())
+    .map(dir => dir.name)
+    .filter(dirName => dirName.toString() !== 'obj' && dirName.toString() !== 'bin');
 
   for (const dir of dirs) {
     addAsepriteEntity(pathToMGCB, dir);
@@ -150,5 +152,5 @@ function createMgcbFile(prefix,pathToContent,addConfig) {
 }
 
 // -- start
-createMgcbFile('win',purePathToContent,addWindowsConfig);
-createMgcbFile('android',purePathToContent,addAndroidConfig);
+createMgcbFile('win', purePathToContent, addWindowsConfig);
+createMgcbFile('android', purePathToContent, addAndroidConfig);
