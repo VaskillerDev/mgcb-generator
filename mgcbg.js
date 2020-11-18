@@ -1,10 +1,11 @@
 #!/usr/bin/env node
+const version = require('./package.json').version;
 const command = process.argv[2] || showHelp();
 
 function showHelp() {
   console.log(
-    '\n' +
-      'Usage: mgcbg <command> <flags> \n\n' +
+      `mgcbg ver. ${version} \n\n` +
+      'Usage: mgcbg <command> <flags>\n\n' +
       'where is one of: \n' +
       'init, gen\n\n' +
       'mgcbg help         quick help\n' +
