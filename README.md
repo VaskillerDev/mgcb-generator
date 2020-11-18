@@ -1,4 +1,4 @@
-<h1>[wip] mgcb-generator</h1>
+<h1>mgcb-generator</h1>
 Simple .mgcb file generator for Monogame. CLI-tools for generate .mgcb from args or config file.
 The file is also generated based on the attributes.
 
