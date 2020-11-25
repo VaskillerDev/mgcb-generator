@@ -44,13 +44,14 @@ if (!fs.existsSync(purePathToContent)) {
 }
 // -- declaration
 function addAsepriteEntity(mgcb, dirName) {
-  //todo: check json for the aseprite key
   // require .json && .png file
   try {
     const pathToEntity = path.join(purePathToContent, dirName);
     const list = fs.readdirSync(pathToEntity);
     const spriteFile = list.filter(file => path.extname(file) === '.png')[0];
     const animationFile = list.filter(file => path.extname(file) === '.json')[0];
+
+    if (!(spriteFile && animationFile)) return undefined;
 
     // cuz it's this may not be an animation at all
     const pathToMaybeAsepriteJson = path.resolve(pathToEntity + '/' + animationFile);
@@ -91,6 +92,37 @@ function addAsepriteEntity(mgcb, dirName) {
   } catch (e) {
     console.error('Error in addAsepriteEntity: ' + e);
   }
+}
+
+function addTiledEntity(mgcb, dirName) {
+  // require .tmx && .tsx && .png file
+  const pathToEntity = path.join(purePathToContent, dirName);
+  const list = fs.readdirSync(pathToEntity);
+  const tmxFile = list.filter(file => path.extname(file) === '.tmx')[0]; // map level
+  const tsxFile = list.filter(file => path.extname(file) === '.tsx')[0]; // tile map
+  const tileTexture = list.filter(file => path.extname(file) === '.png')[0];
+
+  if (!(tmxFile && tsxFile && tileTexture)) return undefined;
+
+  if (DEBUG) console.log(`dirName: ${dirName} \nTmx file: ${tmxFile} \nTsx file: ${tsxFile} \nTile textue: ${tileTexture}`);
+
+  // .tmx
+  fs.appendFileSync(mgcb, `#begin ${dirName}/${tmxFile}\n/copy:${dirName}/${tmxFile}\n\n`);
+  fs.appendFileSync(mgcb, `#begin ${dirName}/${tileTexture}\n`);
+  fs.appendFileSync(
+      mgcb,
+      '/importer:TextureImporter\n' +
+      '/processor:TextureProcessor\n' +
+      '/processorParam:ColorKeyColor=255,0,255,255\n' +
+      '/processorParam:ColorKeyEnabled=True\n' +
+      '/processorParam:GenerateMipmaps=False\n' +
+      '/processorParam:PremultiplyAlpha=True\n' +
+      '/processorParam:ResizeToPowerOfTwo=False\n' +
+      '/processorParam:MakeSquare=False\n' +
+      '/processorParam:TextureFormat=Color\n'
+  );
+  fs.appendFileSync(mgcb, `/build:${dirName}/${tileTexture}\n\n`);
+  fs.appendFileSync(mgcb,`#begin ${dirName}/${tsxFile}\n/copy:${dirName}/${tsxFile}\n\n`)
 }
 
 function addAsepriteReferences(mgcb) {
@@ -147,7 +179,7 @@ function createMgcbFile(prefix, pathToContent, addConfig) {
     .filter(dirName => dirName.toString() !== 'obj' && dirName.toString() !== 'bin');
 
   for (const dir of dirs) {
-    addAsepriteEntity(pathToMGCB, dir);
+    addAsepriteEntity(pathToMGCB, dir) || addTiledEntity(pathToMGCB, dir);
   }
 }
 
