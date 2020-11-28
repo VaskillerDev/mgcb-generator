@@ -106,3 +106,58 @@ if (fs.existsSync(pathToMgcbGenConfigFile)) {
     }
   }
 }
+
+{
+  // simple search MonoGame.Extended.Content.Pipeline.dll (support by 3.8)
+  const dirs = path.resolve('./', './').split(path.sep);
+  const last = dirs.length - 1;
+  const nugetDirs = [];
+  const extendedContentPipelineRegex = new RegExp('[Ee]xtended\.content\.pipeline');
+  const versionRegex = new RegExp('3\.8\.0');
+
+  let slide = last;
+  let currentPath = path.resolve(dirs[last]);
+  let nugetDir;
+  while (slide > 0) {
+    currentPath = path.resolve(currentPath, '../');
+    fs.readdirSync(currentPath).find(file => {
+      // search nuget-like dirs
+      // require dirs
+      let isNugetDir = false;
+      if (file === '.nuget') (nugetDir = path.join(currentPath, file, 'packages')) && (isNugetDir = true); // for usr dir
+      if (file === 'packages') (nugetDir = path.join(currentPath, file)) && (isNugetDir = true);
+      return isNugetDir;
+    }) && nugetDirs.push(nugetDir); // side effect
+    --slide;
+  }
+
+  if (nugetDirs.length === 0) {
+    console.warn(`${WARN_MSG} nuget packages dir not found. Please set the path manually.`);
+  } else {
+    const asepriteFiles = [];
+
+    nugetDirs.forEach(candidatePath => {
+      // search aseprite-like dirs
+      const files = fs.readdirSync(candidatePath);
+      const asepriteLib = files.filter(file => extendedContentPipelineRegex.test(file)).toString();
+      if (asepriteLib) asepriteFiles.push(path.join(candidatePath, asepriteLib));
+    });
+
+    if (asepriteFiles.length !== 0) {
+      let collectionPotentialWithPipelineLib = asepriteFiles
+          .map(candidatePath => search(candidatePath, 'MonoGame.Extended.Content.Pipeline.dll')) // search aseprite files
+          .flat();
+
+      const endedPathToPipelineLib = collectionPotentialWithPipelineLib.filter(potentialPath =>
+          versionRegex.test(potentialPath.toString())
+      )[0];
+
+      if (!endedPathToPipelineLib) return; // todo: work with this line for way wit alternatives search
+
+      config.extendedContentPipeline = wsl.toWindowsSync(endedPathToPipelineLib) || endedPathToPipelineLib;
+
+      const configString = JSON.stringify(config, null, ' ');
+      fs.writeFileSync(pathToMgcbGenConfigFile, configString);
+    }
+  }
+}
