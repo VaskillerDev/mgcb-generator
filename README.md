@@ -67,6 +67,7 @@ Initially, the configuration file should look something like this:<br>
   "debug": false,
   "asepriteLib": "/path/to/your/MonoGame.Aseprite.dll",
   "asepritePipeline": "path/to/your/MonoGame.Aseprite.ContentPipeline.dll",
+  "extendedContentPipeline":"path/to/your/MonoGame.Extended.Content.Pipeline.dll",
   "editor": "/path/to/your/mgcb-editor.exe"
 }
 ```
