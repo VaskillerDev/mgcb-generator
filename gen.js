@@ -26,6 +26,7 @@ console.log('Your config: ', config);
 const DEBUG = process.env.debug || config['debug'] || false;
 const ASEPRITE_LIB_PATH = process.env.asepriteLib || config['asepriteLib'];
 const ASEPRITE_PIPELINE_PATH = process.env.asepritePipeline || config['asepritePipeline'];
+const EXTENDED_CONTENT_PIPELINE_PATH = process.env.extendedContentPipeline || config['extendedContentPipeline'];
 const maybePathToContent =
   process.env.content || config['content'] || new Error('Path to content directory not found.');
 
@@ -107,7 +108,10 @@ function addTiledEntity(mgcb, dirName) {
   if (DEBUG) console.log(`dirName: ${dirName} \nTmx file: ${tmxFile} \nTsx file: ${tsxFile} \nTile textue: ${tileTexture}`);
 
   // .tmx
-  fs.appendFileSync(mgcb, `#begin ${dirName}/${tmxFile}\n/copy:${dirName}/${tmxFile}\n\n`);
+  fs.appendFileSync(mgcb, `#begin ${dirName}/${tmxFile}\n`);
+  fs.appendFileSync(mgcb, '/importer:TiledMapImporter\n' + '/processor:TiledMapProcessor\n');
+  fs.appendFileSync(mgcb, `/build:${dirName}/${tmxFile}\n\n`);
+  // .png
   fs.appendFileSync(mgcb, `#begin ${dirName}/${tileTexture}\n`);
   fs.appendFileSync(
       mgcb,
@@ -122,7 +126,11 @@ function addTiledEntity(mgcb, dirName) {
       '/processorParam:TextureFormat=Color\n'
   );
   fs.appendFileSync(mgcb, `/build:${dirName}/${tileTexture}\n\n`);
-  fs.appendFileSync(mgcb,`#begin ${dirName}/${tsxFile}\n/copy:${dirName}/${tsxFile}\n\n`)
+
+  // .tsx
+  fs.appendFileSync(mgcb, `#begin ${dirName}/${tsxFile}\n`);
+  fs.appendFileSync(mgcb, '/importer:TiledMapTilesetImporter\n' + '/processor:TiledMapTilesetProcessor\n');
+  fs.appendFileSync(mgcb, `/build:${dirName}/${tsxFile}\n\n`);
 }
 
 function addAsepriteReferences(mgcb) {
@@ -132,6 +140,13 @@ function addAsepriteReferences(mgcb) {
   }
   fs.appendFileSync(mgcb, `/reference:${ASEPRITE_LIB_PATH}\n`);
   fs.appendFileSync(mgcb, `/reference:${ASEPRITE_PIPELINE_PATH}\n`);
+}
+
+function addMonogameExtendedcContentPipeline(mgcb) {
+  if (DEBUG) {
+    console.log('extendedContentPipeline: ' + EXTENDED_CONTENT_PIPELINE_PATH);
+  }
+  fs.appendFileSync(mgcb, `/reference:${EXTENDED_CONTENT_PIPELINE_PATH}\n`);
 }
 
 function checkFile(file, msg) {
@@ -171,6 +186,7 @@ function createMgcbFile(prefix, pathToContent, addConfig) {
   addConfig(pathToMGCB);
   fs.appendFileSync(pathToMGCB, '\n#-------------------------------- References --------------------------------#\n\n');
   addAsepriteReferences(pathToMGCB);
+  addMonogameExtendedcContentPipeline(pathToMGCB);
   fs.appendFileSync(pathToMGCB, '\n#---------------------------------- Content ---------------------------------#\n\n');
   const dirs = fs
     .readdirSync(pathToContent, { withFileTypes: true })
