@@ -17,7 +17,20 @@ function ToWindowsSync(wslPath) {
   return undefined;
 }
 
+function toWslSyncUnsafe(winPath) {
+  // convert windows path to unix
+  const parsedWinPath = winPath.split('/');
+  const usersIndex = parsedWinPath.indexOf('Users');
+  const winVD = parsedWinPath[usersIndex - 1].toLowerCase().slice(0,-1); // get virtual disk name
+  const unixUserPath = parsedWinPath.slice(usersIndex,parsedWinPath.length);
+  return "/mnt/"+winVD+"/"+unixUserPath.join('/');
+}
+
+function toWslSync(winPath) {
+  return toWslSyncUnsafe(winPath);
+}
+
 module.exports = {
-  isWslPath: isWslPath,
   toWindowsSync: ToWindowsSync,
+  toWslSync: toWslSync
 };
