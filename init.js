@@ -117,8 +117,8 @@ if (fs.existsSync(pathToMgcbGenConfigFile)) {
   const dirs = path.resolve('./', './').split(path.sep);
   const last = dirs.length - 1;
   const nugetDirs = [];
-  const extendedContentPipelineRegex = new RegExp('[Ee]xtended\.content\.pipeline');
-  const versionRegex = new RegExp('3\.8\.0');
+  const extendedContentPipelineRegex = new RegExp('[Ee]xtended.content.pipeline');
+  const versionRegex = new RegExp('3.8.0');
 
   let slide = last;
   let currentPath = path.resolve(dirs[last]);
@@ -150,11 +150,11 @@ if (fs.existsSync(pathToMgcbGenConfigFile)) {
 
     if (monogamePipelineFiles.length !== 0) {
       let collectionPotentialWithPipelineLib = monogamePipelineFiles
-          .map(candidatePath => search(candidatePath, 'MonoGame.Extended.Content.Pipeline.dll')) // search monogame extended files
-          .flat();
+        .map(candidatePath => search(candidatePath, 'MonoGame.Extended.Content.Pipeline.dll')) // search monogame extended files
+        .flat();
 
       const endedPathToPipelineLib = collectionPotentialWithPipelineLib.filter(potentialPath =>
-          versionRegex.test(potentialPath.toString())
+        versionRegex.test(potentialPath.toString())
       )[0];
 
       if (!endedPathToPipelineLib) return; // todo: work with this line for way wit alternatives search
@@ -172,8 +172,8 @@ if (fs.existsSync(pathToMgcbGenConfigFile)) {
   const dirs = path.resolve('./', './').split(path.sep);
   const last = dirs.length - 1;
   const nugetDirs = [];
-  const contentBuilderTaskRegex = new RegExp('[Mm]onogame\.content\.builder\.task');
-  const versionRegex = new RegExp('3\.8');
+  const contentBuilderTaskRegex = new RegExp('[Mm]onogame.content.builder.task');
+  const versionRegex = new RegExp('3.8');
 
   let slide = last;
   let currentPath = path.resolve(dirs[last]);
@@ -205,11 +205,11 @@ if (fs.existsSync(pathToMgcbGenConfigFile)) {
 
     if (mgcbToolFiles.length !== 0) {
       let collectionPotentialTools = mgcbToolFiles
-          .map(candidatePath => search(candidatePath, 'mgcb.exe')) // search aseprite files
-          .flat();
+        .map(candidatePath => search(candidatePath, 'mgcb.exe')) // search aseprite files
+        .flat();
 
-      const endedPathToTool= collectionPotentialTools.filter(potentialPath =>
-          versionRegex.test(potentialPath.toString())
+      const endedPathToTool = collectionPotentialTools.filter(potentialPath =>
+        versionRegex.test(potentialPath.toString())
       )[0];
 
       if (!endedPathToTool) return; // todo: work with this line for way wit alternatives search

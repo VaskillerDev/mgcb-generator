@@ -13,7 +13,7 @@
 // -> recursively add all files to example.mgcb
 const path = require('path');
 const fs = require('fs');
-const wsl = require("./wslPath");
+const wsl = require('./wslPath');
 
 let configFile;
 let config;
@@ -109,7 +109,8 @@ function addTiledEntity(mgcb, dirName) {
 
   if (!(tmxFile && tsxFile && tileTexture)) return undefined;
 
-  if (DEBUG) console.log(`dirName: ${dirName} \nTmx file: ${tmxFile} \nTsx file: ${tsxFile} \nTile textue: ${tileTexture}`);
+  if (DEBUG)
+    console.log(`dirName: ${dirName} \nTmx file: ${tmxFile} \nTsx file: ${tsxFile} \nTile textue: ${tileTexture}`);
 
   // .tmx
   fs.appendFileSync(mgcb, `#begin ${dirName}/${tmxFile}\n`);
@@ -118,8 +119,8 @@ function addTiledEntity(mgcb, dirName) {
   // .png
   fs.appendFileSync(mgcb, `#begin ${dirName}/${tileTexture}\n`);
   fs.appendFileSync(
-      mgcb,
-      '/importer:TextureImporter\n' +
+    mgcb,
+    '/importer:TextureImporter\n' +
       '/processor:TextureProcessor\n' +
       '/processorParam:ColorKeyColor=255,0,255,255\n' +
       '/processorParam:ColorKeyEnabled=True\n' +
@@ -186,21 +187,20 @@ function execEditor() {
   const os = require('os');
   let editorPath = wsl.toWindowsSync(EDITOR_PATH) || EDITOR_PATH;
 
-  if (os.platform() === "linux") editorPath = wsl.toWslSync(editorPath);
+  if (os.platform() === 'linux') editorPath = wsl.toWslSync(editorPath);
 
-  const buildWithMgcbEditor =  (mgcbFile) => {
+  const buildWithMgcbEditor = mgcbFile => {
     const command = ` ${editorPath} /b ${mgcbFile}`;
-    console.log("Mgcb run: " + command);
+    console.log('Mgcb run: ' + command);
     try {
-      cp.execSync(command,{cwd: config['content']});
+      cp.execSync(command, { cwd: config['content'] });
     } catch (out) {
       if (out.stderr.length > 0) console.error(out.stderr.toString());
       if (out.stdout.length > 0) console.log(out.stdout.toString());
     }
-
-  }
-   buildWithMgcbEditor('win_content.mgcb');
-   buildWithMgcbEditor('android_content.mgcb');
+  };
+  buildWithMgcbEditor('win_content.mgcb');
+  buildWithMgcbEditor('android_content.mgcb');
 }
 
 function createMgcbFile(prefix, pathToContent, addConfig) {
@@ -218,12 +218,14 @@ function createMgcbFile(prefix, pathToContent, addConfig) {
     .readdirSync(pathToContent, { withFileTypes: true })
     .filter(file => file.isDirectory())
     .map(dir => dir.name)
-    .filter(dirName => dirName.toString() !== 'obj'
-        && dirName.toString() !== 'bin'
-        && dirName.toString() !== 'win_bin'
-        && dirName.toString() !== 'win_obj'
-        && dirName.toString() !== 'android_bin'
-        && dirName.toString() !== 'android_obj'
+    .filter(
+      dirName =>
+        dirName.toString() !== 'obj' &&
+        dirName.toString() !== 'bin' &&
+        dirName.toString() !== 'win_bin' &&
+        dirName.toString() !== 'win_obj' &&
+        dirName.toString() !== 'android_bin' &&
+        dirName.toString() !== 'android_obj'
     );
 
   for (const dir of dirs) {
