@@ -50,6 +50,7 @@ foo@bar:/root/your/awesome/MonogameProject/$ mkdir content
 foo@bar:/root/your/awesome/MonogameProject/$ mgcbg init
 foo@bar:/root/your/awesome/MonogameProject/$ ls
 bin
+content
 Game1.cs
 obj
 Program.cs
